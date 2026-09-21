@@ -15,6 +15,7 @@ Widget _mapWithObjects({
   Set<Polygon> polygons = const <Polygon>{},
   Set<Polyline> polylines = const <Polyline>{},
   Set<TileOverlay> tileOverlays = const <TileOverlay>{},
+  ArgumentCallback<PointOfInterestId>? onPoiTap,
 }) {
   return Directionality(
     textDirection: TextDirection.ltr,
@@ -25,6 +26,7 @@ Widget _mapWithObjects({
       polygons: polygons,
       polylines: polylines,
       tileOverlays: tileOverlays,
+      onPoiTap: onPoiTap,
     ),
   );
 }
@@ -163,5 +165,17 @@ void main() {
     expect(map.polylineUpdates[2].polylineIdsToRemove.isEmpty, true);
 
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('POI tap invokes callback', (WidgetTester tester) async {
+    PointOfInterestId? tappedPoi;
+    await tester.pumpWidget(_mapWithObjects(onPoiTap: (PointOfInterestId poi) => tappedPoi = poi));
+    await tester.pumpAndSettle();
+
+    const poi = PointOfInterestId('place-123');
+    platform.mapEventStreamController.add(PointOfInterestTapEvent(0, poi));
+    await tester.pump();
+
+    expect(tappedPoi, poi);
   });
 }
