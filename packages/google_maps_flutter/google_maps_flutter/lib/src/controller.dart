@@ -108,6 +108,11 @@ class GoogleMapController {
     );
     _streamSubscriptions.add(
       GoogleMapsFlutterPlatform.instance
+          .onPointOfInterestTap(mapId: mapId)
+          .listen((PointOfInterestTapEvent e) => _googleMapState.onPoiTap(e.value)),
+    );
+    _streamSubscriptions.add(
+      GoogleMapsFlutterPlatform.instance
           .onLongPress(mapId: mapId)
           .listen((MapLongPressEvent e) => _googleMapState.onLongPress(e.position)),
     );

@@ -51,4 +51,27 @@ void main() {
 
     expect(platform.mapEventStreamController.hasListener, false);
   });
+
+  testWidgets('POI tap invokes callback', (WidgetTester tester) async {
+    final platform = FakeGoogleMapsFlutterPlatform();
+    GoogleMapsFlutterPlatform.instance = platform;
+    PointOfInterestId? tappedPoi;
+
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: GoogleMap(
+          initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
+          onPoiTap: (PointOfInterestId poi) => tappedPoi = poi,
+        ),
+      ),
+    );
+    await tester.pump();
+
+    const poi = PointOfInterestId('place-123');
+    platform.mapEventStreamController.add(PointOfInterestTapEvent(0, poi));
+    await tester.pump();
+
+    expect(tappedPoi, poi);
+  });
 }

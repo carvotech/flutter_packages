@@ -1,3 +1,7 @@
+## 2.18.1+poi.1
+
+* Adds an `onPoiTap` callback that reports the tapped place ID.
+
 ## 2.18.1
 
 * Clarifies that clearing a tile cache may cause flickering on some platforms.
