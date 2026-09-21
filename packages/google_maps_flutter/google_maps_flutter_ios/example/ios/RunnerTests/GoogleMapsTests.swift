@@ -86,6 +86,30 @@ class StubPluginRegistrar: NSObject, FlutterPluginRegistrar {
     #expect(mapView.frameObserverCount == 0)
   }
 
+  @Test func didTapPOIForwardsPlaceIdentifierToEventHandler() {
+    let options = GMSMapViewOptions()
+    options.camera = GMSCameraPosition(latitude: 0, longitude: 0, zoom: 0)
+    let mapView = PartiallyMockedMapView(options: options)
+    let controller = FGMGoogleMapController(
+      mapView: mapView,
+      viewIdentifier: 0,
+      creationParameters: emptyCreationParameters(),
+      assetProvider: TestAssetProvider(),
+      binaryMessenger: StubBinaryMessenger()
+    )
+    let eventHandler = TestMapEventHandler()
+    controller.mapEventHandler = eventHandler
+
+    controller.mapView(
+      mapView,
+      didTapPOIWithPlaceID: "place-123",
+      name: "Test POI",
+      location: CLLocationCoordinate2D(latitude: 25.033, longitude: 121.5654)
+    )
+
+    #expect(eventHandler.lastTappedPointOfInterestPlaceIdentifier == "place-123")
+  }
+
   @Test func mapsServiceSync() {
     // The API requires a registrar, but this test doesn't actually use it, so just pass in a
     // dummy object rather than set up a full mock.

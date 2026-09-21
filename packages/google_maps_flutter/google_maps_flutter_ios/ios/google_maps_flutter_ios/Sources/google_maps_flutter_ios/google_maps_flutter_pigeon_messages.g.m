@@ -4351,6 +4351,32 @@ void SetUpFGMMapsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
                    }
                  }];
 }
+- (void)didTapPointOfInterestWithPlaceIdentifier:(NSString *)arg_placeId
+                                      completion:(void (^)(FlutterError *_Nullable))completion {
+  NSString *channelName = [NSString
+      stringWithFormat:
+          @"%@%@",
+          @"dev.flutter.pigeon.google_maps_flutter_ios.MapsCallbackApi.onPointOfInterestTap",
+          _messageChannelSuffix];
+  FlutterBasicMessageChannel *channel = [FlutterBasicMessageChannel
+      messageChannelWithName:channelName
+             binaryMessenger:self.binaryMessenger
+                       codec:FGMGetGoogleMapsFlutterPigeonMessagesCodec()];
+  [channel sendMessage:@[ arg_placeId ?: [NSNull null] ]
+                 reply:^(NSArray<id> *reply) {
+                   if (reply != nil) {
+                     if (reply.count > 1) {
+                       completion([FlutterError errorWithCode:reply[0]
+                                                      message:reply[1]
+                                                      details:reply[2]]);
+                     } else {
+                       completion(nil);
+                     }
+                   } else {
+                     completion(createConnectionError(channelName));
+                   }
+                 }];
+}
 - (void)didTapCluster:(FGMPlatformCluster *)arg_cluster
            completion:(void (^)(FlutterError *_Nullable))completion {
   NSString *channelName = [NSString

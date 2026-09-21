@@ -905,6 +905,22 @@ void main() {
     expect((await stream.next).value.value, equals(objectId));
   });
 
+  test('points of interest send tap events to correct stream', () async {
+    const mapId = 1;
+    const placeId = 'place-123';
+
+    final maps = GoogleMapsFlutterIOS();
+    final HostMapMessageHandler callbackHandler = maps.ensureHandlerInitialized(mapId);
+
+    final stream = StreamQueue<PointOfInterestTapEvent>(maps.onPointOfInterestTap(mapId: mapId));
+
+    callbackHandler.onPointOfInterestTap(placeId);
+
+    final PointOfInterestTapEvent event = await stream.next;
+    expect(event.mapId, mapId);
+    expect(event.value.value, placeId);
+  });
+
   test('clusters send tap events to correct stream', () async {
     const mapId = 1;
     const managerId = 'manager-id';

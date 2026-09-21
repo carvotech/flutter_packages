@@ -8,6 +8,7 @@
 #import "FGMAssetProvider.h"
 #import "FGMCATransactionWrapper.h"
 #import "FGMGoogleMapController.h"
+#import "FGMMapEventDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,6 +57,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // The main Pigeon API implementation.
 @property(nonatomic, strong, readonly) FGMMapCallHandler *callHandler;
+
+// The map event handler, exposed for testing native delegate forwarding.
+@property(nonatomic, strong) id<FGMMapEventDelegate> mapEventHandler;
 
 @end
 

@@ -12,7 +12,7 @@ import 'page.dart';
 
 const CameraPosition _kInitialPosition = CameraPosition(
   target: LatLng(-33.852, 151.211),
-  zoom: 11.0,
+  zoom: 15.0,
 );
 
 class MapClickPage extends GoogleMapExampleAppPage {
@@ -36,6 +36,7 @@ class _MapClickBodyState extends State<_MapClickBody> {
 
   ExampleGoogleMapController? mapController;
   LatLng? _lastTap;
+  PointOfInterestId? _lastPoiTap;
   LatLng? _lastLongPress;
 
   @override
@@ -48,6 +49,12 @@ class _MapClickBodyState extends State<_MapClickBody> {
           _lastTap = pos;
         });
       },
+      onPoiTap: (PointOfInterestId pointOfInterestId) {
+        debugPrint('Tapped POI placeId: ${pointOfInterestId.value}');
+        setState(() {
+          _lastPoiTap = pointOfInterestId;
+        });
+      },
       onLongPress: (LatLng pos) {
         setState(() {
           _lastLongPress = pos;
@@ -56,6 +63,13 @@ class _MapClickBodyState extends State<_MapClickBody> {
     );
 
     final columnChildren = <Widget>[
+      const Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: Text(
+          'Tap a built-in point of interest to receive its Place ID.',
+          textAlign: TextAlign.center,
+        ),
+      ),
       Padding(
         padding: const EdgeInsets.all(10.0),
         child: Center(child: SizedBox(width: 300.0, height: 200.0, child: googleMap)),
@@ -64,11 +78,13 @@ class _MapClickBodyState extends State<_MapClickBody> {
 
     if (mapController != null) {
       final lastTap = 'Tap:\n${_lastTap ?? ""}\n';
+      final lastPoiTap = 'POI place ID:\n${_lastPoiTap?.value ?? ""}\n';
       final lastLongPress = 'Long press:\n${_lastLongPress ?? ""}';
       columnChildren.add(Center(child: Text(lastTap, textAlign: TextAlign.center)));
       columnChildren.add(
         Center(child: Text(_lastTap != null ? 'Tapped' : '', textAlign: TextAlign.center)),
       );
+      columnChildren.add(Center(child: Text(lastPoiTap, textAlign: TextAlign.center)));
       columnChildren.add(Center(child: Text(lastLongPress, textAlign: TextAlign.center)));
       columnChildren.add(
         Center(

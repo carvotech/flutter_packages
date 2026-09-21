@@ -7,6 +7,8 @@ import google_maps_flutter_ios
 
 /// Fake implementation of FGMMapEventDelegate for unit tests.
 class TestMapEventHandler: NSObject, FGMMapEventDelegate {
+  var lastTappedPointOfInterestPlaceIdentifier: String?
+
   func didStartCameraMove() {}
 
   func didMoveCamera(to cameraPosition: FGMPlatformCameraPosition) {}
@@ -14,6 +16,10 @@ class TestMapEventHandler: NSObject, FGMMapEventDelegate {
   func didIdleCamera() {}
 
   func didTap(atPosition position: FGMPlatformLatLng) {}
+
+  func didTapPointOfInterest(withPlaceIdentifier placeIdentifier: String) {
+    lastTappedPointOfInterestPlaceIdentifier = placeIdentifier
+  }
 
   func didLongPress(atPosition position: FGMPlatformLatLng) {}
 

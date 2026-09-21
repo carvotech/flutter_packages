@@ -139,6 +139,12 @@
                               }];
 }
 
+- (void)didTapPointOfInterestWithPlaceIdentifier:(NSString *)placeIdentifier {
+  [self.callbackHandler didTapPointOfInterestWithPlaceIdentifier:placeIdentifier
+                                                      completion:^(FlutterError *_){
+                                                      }];
+}
+
 - (void)didLongPressAtPosition:(FGMPlatformLatLng *)position {
   [self.callbackHandler didLongPressAtPosition:position
                                     completion:^(FlutterError *_){
@@ -247,7 +253,7 @@
 
 @property(nonatomic, strong) GMSMapView *mapView;
 @property(nonatomic, strong) FGMMapsCallbackApi *dartCallbackHandler;
-@property(nonatomic, strong) FGMDefaultMapEventHandler *mapEventHandler;
+@property(nonatomic, strong) id<FGMMapEventDelegate> mapEventHandler;
 @property(nonatomic, assign) BOOL trackCameraPosition;
 @property(nonatomic, strong) FGMClusterManagersController *clusterManagersController;
 @property(nonatomic, strong) FGMMarkersController *markersController;
@@ -560,6 +566,13 @@
 
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
   [self.mapEventHandler didTapAtPosition:FGMGetPigeonLatLngForCoordinate(coordinate)];
+}
+
+- (void)mapView:(GMSMapView *)mapView
+    didTapPOIWithPlaceID:(NSString *)placeID
+                    name:(NSString *)name
+                location:(CLLocationCoordinate2D)location {
+  [self.mapEventHandler didTapPointOfInterestWithPlaceIdentifier:placeID];
 }
 
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {

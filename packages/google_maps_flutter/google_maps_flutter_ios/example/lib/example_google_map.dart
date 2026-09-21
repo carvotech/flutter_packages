@@ -79,6 +79,9 @@ class ExampleGoogleMapController {
         .onCircleTap(mapId: mapId)
         .listen((CircleTapEvent e) => _googleMapState.onCircleTap(e.value));
     GoogleMapsFlutterPlatform.instance
+        .onPointOfInterestTap(mapId: mapId)
+        .listen((PointOfInterestTapEvent e) => _googleMapState.onPoiTap(e.value));
+    GoogleMapsFlutterPlatform.instance
         .onGroundOverlayTap(mapId: mapId)
         .listen((GroundOverlayTapEvent e) => _googleMapState.onGroundOverlayTap(e.value));
     GoogleMapsFlutterPlatform.instance
@@ -260,6 +263,7 @@ class ExampleGoogleMap extends StatefulWidget {
     this.onCameraMove,
     this.onCameraIdle,
     this.onTap,
+    this.onPoiTap,
     this.onLongPress,
     this.mapId,
     this.style,
@@ -343,6 +347,9 @@ class ExampleGoogleMap extends StatefulWidget {
 
   /// Called every time a [ExampleGoogleMap] is tapped.
   final ArgumentCallback<LatLng>? onTap;
+
+  /// Called when a point of interest on the map is tapped.
+  final ArgumentCallback<PointOfInterestId>? onPoiTap;
 
   /// Called every time a [ExampleGoogleMap] is long pressed.
   final ArgumentCallback<LatLng>? onLongPress;
@@ -568,6 +575,10 @@ class _ExampleGoogleMapState extends State<ExampleGoogleMap> {
 
   void onTap(LatLng position) {
     widget.onTap?.call(position);
+  }
+
+  void onPoiTap(PointOfInterestId pointOfInterestId) {
+    widget.onPoiTap?.call(pointOfInterestId);
   }
 
   void onLongPress(LatLng position) {

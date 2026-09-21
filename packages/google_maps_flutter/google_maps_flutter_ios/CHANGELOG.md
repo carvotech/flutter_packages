@@ -1,3 +1,7 @@
+## 2.18.6+poi.1
+
+* Adds support for reporting the place ID when a point of interest is tapped.
+
 ## 2.18.6
 
 * Updates pigeon dev_dependency to ^27.3.2 for analyzer 14 compatibility.
